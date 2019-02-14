@@ -76,9 +76,9 @@ FD.ID, FD.OP_CARRIER, FD.TAIL_NUM, TD.MANUFACTURER, TD.MODEL,
 FD.ORIGIN, FD.ORIGIN_CITY_NAME, FD.DEST, FD.DEST_CITY_NAME,
 FD.MONTH, FD.DAY_OF_WEEK, FD.DEP_TIME_BLK, FD.ARR_DELAY
 FROM
-BHUDSON.BFD_12MONTHS AS FD
+BFD_12MONTHS AS FD
 INNER JOIN
-BHUDSON.TAILNUMS AS TD
+TAILNUMS AS TD
 ON
 FD.TAIL_NUM = TD.TAIL_NUMBER);
 ```
@@ -92,7 +92,7 @@ evaluate its performance/accuracy later by running the ML model on our test
 data.
 
 ```sql
-CALL IDAX.SPLIT_DATA('intable=BHUDSON.BFD_12MONTHS_VIEW,
+CALL IDAX.SPLIT_DATA('intable=BFD_12MONTHS_VIEW,
 traintable=BFD12_TRAIN,
 testtable=BFD12_TEST,
 id=ID,
@@ -134,7 +134,7 @@ id=ID');
 ```
 
 Essentially: "use the `BFD_12_ARR` model to predict arrival delays in
-`BFD12_TEST` and store the output in `BFD12_ARR_OUT`.
+`BFD12_TEST` and store the output in `BFD12_ARR_OUT`."
 
 Once you've run the model on your test data, let's compare the actual delays to
 the delays we predicted.  Keep in mind that for this data, negative delay means
@@ -143,6 +143,6 @@ the flight landed early.
 ```sql
 SELECT IN.ID,
 IN.ARR_DELAY as SOURCE_DELAY, OUT.ARR_DELAY AS SOURCE_PREDICT
-FROM BHUDSON.BFD12_TEST AS IN, BHUDSON.BFD12_ARR_OUT AS OUT WHERE IN.ID=OUT.ID;
+FROM BFD12_TEST AS IN, BFD12_ARR_OUT AS OUT WHERE IN.ID=OUT.ID;
 ```
 
