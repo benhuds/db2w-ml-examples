@@ -1,9 +1,19 @@
 # In-database machine learning with Db2 Warehouse on Cloud
 
-This is a simple tutorial which walks through using Db2 Warehouse's built-in
-machine learning functions to train and run models on data residing in Db2
-Warehouse on Cloud.  Operations are performed by the Db2 Warehouse engine
-itself - no data movement required.
+*[IBM Db2 Warehouse on Cloud](https://www.ibm.com/cloud/db2-warehouse-on-cloud)
+is IBM's elastic cloud data warehouse service*.  This is a simple tutorial that
+walks through how to use Db2 Warehouse on Cloud's built-in machine learning
+functions to train and run models on data residing in Db2 Warehouse on Cloud.
+Operations are performed by the Db2 Warehouse engine itself - no data movement
+required.
+
+### What you'll do
+
+1. Provision an IBM Db2 Warehouse on Cloud system
+2. Load some flight data into your Db2 Warehouse on Cloud system
+3. Train and run a simple ML model on the flight data to predict flight delays
+
+### Prerequisites
 
 For this tutorial, you'll need a Db2 Warehouse on Cloud system:
  
@@ -17,9 +27,6 @@ One_ plan, and click _Create_ to create your Flex One system.
 
 Flex One is a paid Db2 Warehouse on Cloud plan, but the amount of IBM Cloud
 credits incurred during this tutorial is minimal.
-
-We'll load some flight data into your system once it's set up, then train and
-run a simple ML model on it to predict flight delays.
 
 ### Loading data
 
