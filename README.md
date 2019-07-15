@@ -5,9 +5,18 @@ machine learning functions to train and run models on data residing in Db2
 Warehouse on Cloud.  Operations are performed by the Db2 Warehouse engine
 itself - no data movement required.
 
-For this tutorial, you'll need a Db2 Warehouse on Cloud system.  You can
-instantly deploy an Entry plan instance, free for up to 1GB of storage, from the
-[IBM Cloud Catalog](https://console.bluemix.net/catalog/services/db2-warehouse).
+For this tutorial, you'll need a Db2 Warehouse on Cloud system:
+ 
+1. Register for an IBM Cloud account
+[here](https://cloud.ibm.com/registration?target=%2Fcatalog%2Fservices%2Fdb2-warehouse).
+You'll get $200 in IBM Cloud credit, which you can use towards Db2 Warehouse on
+Cloud.
+2. Navigate to the [Db2 Warehouse on Cloud
+page](https://cloud.ibm.com/catalog/services/db2-warehouse).  Select the  _Flex
+One_ plan, and click _Create_ to create your Flex One system.
+
+Flex One is a paid Db2 Warehouse on Cloud plan, but the amount of IBM Cloud
+credits incurred during this tutorial is minimal.
 
 We'll load some flight data into your system once it's set up, then train and
 run a simple ML model on it to predict flight delays.
