@@ -52,12 +52,12 @@ to calculate average arrival delay for each carrier in the past 12 months:
 
 ```sql
 SELECT "OP_CARRIER", AVG("ARR_DELAY") AS "AVERAGE ARRIVAL DELAY"
-FROM BFD_12MONTHS
+FROM FLIGHTDATA
 GROUP BY "OP_CARRIER"
 ORDER BY "AVERAGE ARRIVAL DELAY" ASC;
 ```
 
-`BFD_12MONTHS` is what I've named my table containing on-time performance
+`FLIGHTDATA` is what I've named my table containing on-time performance
 information, but you can replace that with whatever name you go with for your
 own database.
 
@@ -83,7 +83,7 @@ numbers as the primary key.  Feel free to replace that name with whatever name
 you decide to go with.
 
 ```sql
-CREATE VIEW BFD_12MONTHS_VIEW
+CREATE VIEW FLIGHTDATA_VIEW
 (ID, OP_CARRIER, TAIL_NUM, MANUFACTURER, MODEL,
 ORIGIN, ORIGIN_CITY_NAME, DEST, DEST_CITY_NAME,
 MONTH, DAY_OF_WEEK, DEP_TIME_BLK, ARR_DELAY)
@@ -93,7 +93,7 @@ FD.ID, FD.OP_CARRIER, FD.TAIL_NUM, TD.MANUFACTURER, TD.MODEL,
 FD.ORIGIN, FD.ORIGIN_CITY_NAME, FD.DEST, FD.DEST_CITY_NAME,
 FD.MONTH, FD.DAY_OF_WEEK, FD.DEP_TIME_BLK, FD.ARR_DELAY
 FROM
-BFD_12MONTHS AS FD
+FLIGHTDATA AS FD
 INNER JOIN
 TAILNUMS AS TD
 ON
@@ -109,27 +109,27 @@ evaluate its performance/accuracy later by running the ML model on our test
 data.
 
 ```sql
-CALL IDAX.SPLIT_DATA('intable=BFD_12MONTHS_VIEW,
-traintable=BFD12_TRAIN,
-testtable=BFD12_TEST,
+CALL IDAX.SPLIT_DATA('intable=FLIGHTDATA_VIEW,
+traintable=FLIGHTDATA_TRAIN,
+testtable=FLIGHTDATA_TEST,
 id=ID,
 fraction=0.35');
 ```
 
-The training and test data will be stored in the `BFD12_TRAIN` and `BFD12_TEST`
+The training and test data will be stored in the `FLIGHTDATA_TRAIN` and `FLIGHTDATA_TEST`
 tables respectively, and this function will use the `ID` column to randomly
 split the data for each.
 
 Now, let's train our linear regression model using the training data in the
-`BFD12_TRAIN` table, and call the resulting model `BFD12_ARR`.  We would like to
+`FLIGHTDATA_TRAIN` table, and call the resulting model `FLIGHTDATA_MODEL`.  We would like to
 predict arrival delay (`ARR_DELAY`), given carrier, manufacturer, model, day of
 week, month, and scheduled departure time (maybe time of day affects delays
 too, who knows).
 
 ```sql
 CALL IDAX.LINEAR_REGRESSION
-('model=BFD12_ARR,
-intable=BFD12_TRAIN,
+('model=FLIGHTDATA_MODEL,
+intable=FLIGHTDATA_TRAIN,
 id=ID,
 target=ARR_DELAY,
 incolumn=OP_CARRIER; MANUFACTURER; MODEL; DAY_OF_WEEK; MONTH; DEP_TIME_BLK,
@@ -144,14 +144,14 @@ It's even easier to test your model against the test data:
 
 ```sql
 CALL IDAX.PREDICT_LINEAR_REGRESSION
-('model=BFD12_ARR,
-intable=BFD12_TEST,
-outtable=BFD12_ARR_OUT,
+('model=FLIGHTDATA_MODEL,
+intable=FLIGHTDATA_TEST,
+outtable=FLIGHTDATA_MODEL_OUT,
 id=ID');
 ```
 
-Essentially: "use the `BFD_12_ARR` model to predict arrival delays in
-`BFD12_TEST` and store the output in `BFD12_ARR_OUT`."
+Essentially: "use the `FLIGHTDATA_MODEL` model to predict arrival delays in
+`BFD12_TEST` and store the output in `FLIGHTDATA_MODEL_OUT`."
 
 Once you've run the model on your test data, let's compare the actual delays to
 the delays we predicted.  Keep in mind that for this data, negative delay means
@@ -160,6 +160,6 @@ the flight landed early.
 ```sql
 SELECT IN.ID,
 IN.ARR_DELAY as SOURCE_DELAY, OUT.ARR_DELAY AS SOURCE_PREDICT
-FROM BFD12_TEST AS IN, BFD12_ARR_OUT AS OUT WHERE IN.ID=OUT.ID;
+FROM FLIGHTDATA_TEST AS IN, FLIGHTDATA_MODEL_OUT AS OUT WHERE IN.ID=OUT.ID;
 ```
 
